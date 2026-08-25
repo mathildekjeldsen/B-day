@@ -20,7 +20,6 @@
 <style>
   :root{
     --bg: #000000;
-    --bg-soft: #0f0c12;
     --pink: #ff6fa8;
     --pink-deep: #d92d74;
     --pink-glow: #fd84ba;
@@ -140,17 +139,17 @@
 
   /* ---------- cat mark (signature element) ---------- */
   .cat-mark{
-  width: clamp(96px, 26vw, 150px);
-  height: auto;
-  margin-bottom: 8px;
-  display: block;
-  filter: drop-shadow(0 0 22px rgba(255,111,168,0.45));
-  animation: catFloat 4.2s ease-in-out infinite;
-}
-@keyframes catFloat{
-  0%,100%{ transform: translateY(0) rotate(-3deg) scale(1); }
-  50%{ transform: translateY(-18px) rotate(3deg) scale(1.03); }
-}
+    width: clamp(96px, 26vw, 150px);
+    height: auto;
+    margin-bottom: 8px;
+    display: block;
+    filter: drop-shadow(0 0 22px rgba(255,111,168,0.45));
+    animation: catFloat 4.2s ease-in-out infinite;
+  }
+  @keyframes catFloat{
+    0%,100%{ transform: translateY(0) rotate(-3deg) scale(1); }
+    50%{ transform: translateY(-18px) rotate(3deg) scale(1.03); }
+  }
 
   /* ---------- name screen ---------- */
   .name-field{
@@ -241,6 +240,7 @@
     color: var(--pink-pale);
     opacity: 0.9;
     max-width: 360px;
+    white-space: pre-line;
   }
 
   .rsvp-block{ margin-top: 40px; padding-bottom: 4vh; }
@@ -278,7 +278,7 @@
   }
   .btn-yes:active, .btn-no:active{ transform: scale(0.94); }
   .btn-yes:hover{ transform: translateY(-2px); box-shadow: 0 0 50px rgba(255,111,168,0.5); }
-  .btn-no:hover{ border-color: var(--pink); transform: translateY(-2px); }
+  .btn-no:hover{ border-color: var(--pink-deep); transform: translateY(-2px); }
 
   /* ---------- confirm screens ---------- */
   #screen-confirm .headline{ font-size: clamp(30px, 8vw, 52px); }
@@ -324,12 +324,10 @@
       If your file isn't named "hello-kitty.png", change the src below to match.
     -->
     <img class="cat-mark" src="hello-kitty.png" alt="cute mascot" />
- 
     <h1 class="headline">pssst... someone has a<br/>birthday invitation for you</h1>
     <p class="subline">♡</p>
     <div class="hint">click anywhere ♡</div>
   </section>
-
 
   <!-- ============ SCREEN 2 — NAME ============ -->
   <section class="screen" id="screen-name">
@@ -341,6 +339,8 @@
       class="name-field"
       placeholder="your name..."
       autocomplete="off"
+      autocapitalize="words"
+      enterkeyhint="done"
       maxlength="30"
     />
     <div class="btn-primary-wrap">
@@ -380,7 +380,7 @@
   </section>
 
   <!-- ============ SCREEN 4 — CONFIRM ============ -->
-  <section class="screen" id="screen-confirm">
+  <section class="screen" id="screen-confirm" aria-live="polite">
     <div id="confirmContent"></div>
   </section>
 
@@ -397,15 +397,10 @@ const CONFIG = {
   date: "saturday, october 3rd",
   time: "7:00 pm",
   location: "ny munkegade 74b",
-  message: "i hope you can come, \n and will celebrate the evening with me ♡",
+  message: "i hope you can make it — let's celebrate the evening together ♡\n\ntheme is kawaii (japanese for \"cute\"), so wear something pink if you can ♡",
 
-  // OPTIONAL: paste a Google Apps Script Web App URL here to log RSVPs
-  // to a Google Sheet automatically. Leave as "" to skip that step —
-  // the site will still work perfectly without it.
-  // See SETUP_INSTRUCTIONS.md for how to create this URL in 5 minutes.
   googleScriptUrl: "https://script.google.com/macros/s/AKfycbyvmr61DQkdOQg1Vi05gGG3yhQexav_OqeOimOIVJMnWpPa5gxclRcV3WHmwC_mDac2/exec"
 };
-
 /* ============================================================
    end of editable section — the rest is the app logic
    ============================================================ */
@@ -500,7 +495,7 @@ const CONFIG = {
       el.innerHTML = `
         <div class="eyebrow">noted</div>
         <h1 class="headline">awww :( ♡</h1>
-        <p class="subline">I'll miss you, ${escapeHtml(guestName)}!</p>
+        <p class="subline">i'll miss you, ${escapeHtml(guestName)}!</p>
       `;
     }
   }
@@ -574,13 +569,13 @@ const CONFIG = {
     }
   }
 
-  setInterval(spawnFx, 550);
-  for (let i=0;i<6;i++) setTimeout(spawnFx, i*250);
+  setInterval(spawnFx, 700);
+  for (let i=0;i<5;i++) setTimeout(spawnFx, i*300);
 
   /* ---------- confetti burst on YES ---------- */
   function launchConfetti(){
     if (!window.gsap) return;
-    const colors = ['#ff6fa8','#ff9dc9','#ffd9ea','#fff6fa'];
+    const colors = ['#ff6fa8','#ff9dc9','#ffd9ea','#fff6fa','#d92d74'];
     for (let i=0;i<28;i++){
       const piece = document.createElement('div');
       piece.className = 'confetti-piece';
