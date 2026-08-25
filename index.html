@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>a secret invitation ♡</title>
+
+<!--
+  ============================================================
+  ✏️  EDIT ME — everything you need to personalise lives in the
+  CONFIG object near the top of the <script> at the bottom of
+  this file. Search for "EDIT THIS SECTION".
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #000000;
+    --bg-soft: #0f0c12;
+    --pink: #ff6fa8;
+    --pink-deep: #d92d74;
+    --pink-glow: #fd84ba;
+    --pink-pale: #ffafd3;
+    --ink: #fff6fa;
+    --line: rgba(255,159,201,0.18);
+    --shadow-pink: 0 0 40px rgba(255,111,168,0.35);
+    --font-display: 'Baloo 2', system-ui, sans-serif;
+    --font-body: 'Quicksand', system-ui, sans-serif;
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: radial-gradient(120% 140% at 50% -10%, #1a0f16 0%, var(--bg) 55%, #050408 100%);
+    color: var(--ink);
+    font-family: var(--font-body);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #app{
+    position: relative;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* ---------- ambient floating background ---------- */
+  #bgFx{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .fx-item{
+    position: absolute;
+    opacity: 0;
+    will-change: transform, opacity;
+    filter: drop-shadow(0 0 6px rgba(255,111,168,0.55));
+  }
+
+  /* subtle vignette + grain-ish glow */
+  .vignette{
+    position: fixed;
+    inset:0;
+    pointer-events:none;
+    z-index: 2;
+    background: radial-gradient(120% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%);
+  }
+
+  /* ---------- screens ---------- */
+  .screen{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8vh 6vw;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+  .screen.active{
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .eyebrow{
+    font-family: var(--font-body);
+    letter-spacing: 0.35em;
+    text-transform: lowercase;
+    font-size: clamp(10px, 2.6vw, 12px);
+    color: var(--pink-glow);
+    opacity: 0.85;
+    margin-bottom: 22px;
+  }
+
+  h1, h2{
+    font-family: var(--font-display);
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.15;
+    color: var(--ink);
+    text-shadow: 0 0 24px rgba(255,111,168,0.35);
+  }
+
+  .headline{ font-size: clamp(26px, 6.4vw, 44px); }
+  .subline{
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: clamp(14px, 3.6vw, 17px);
+    color: var(--pink-pale);
+    opacity: 0.85;
+    margin-top: 14px;
+    max-width: 420px;
+  }
+
+  .hint{
+    margin-top: 46px;
+    font-family: var(--font-body);
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--pink-glow);
+    letter-spacing: 0.08em;
+    animation: pulseHint 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseHint{
+    0%,100%{ opacity: 0.45; transform: translateY(0); }
+    50%{ opacity: 1; transform: translateY(-2px); }
+  }
+
+  /* ---------- cat mark (signature element) ---------- */
+  .cat-mark{
+  width: clamp(96px, 26vw, 150px);
+  height: auto;
+  margin-bottom: 8px;
+  display: block;
+  filter: drop-shadow(0 0 22px rgba(255,111,168,0.45));
+  animation: catFloat 4.2s ease-in-out infinite;
+}
+@keyframes catFloat{
+  0%,100%{ transform: translateY(0) rotate(-3deg) scale(1); }
+  50%{ transform: translateY(-18px) rotate(3deg) scale(1.03); }
+}
+
+  /* ---------- name screen ---------- */
+  .name-field{
+    margin-top: 34px;
+    width: min(80vw, 300px);
+    padding: 16px 20px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: rgba(255,111,168,0.06);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  .name-field::placeholder{ color: rgba(255,217,234,0.4); }
+  .name-field:focus{
+    border-color: var(--pink);
+    background: rgba(255,111,168,0.1);
+    box-shadow: 0 0 0 6px rgba(255,111,168,0.12);
+  }
+
+  .btn{
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: none;
+    cursor: pointer;
+    color: #2a0616;
+    background: linear-gradient(180deg, var(--pink-glow), var(--pink));
+    padding: 14px 34px;
+    border-radius: 999px;
+    font-size: clamp(14px, 3.6vw, 16px);
+    box-shadow: var(--shadow-pink);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  }
+  .btn:active{ transform: scale(0.95); }
+  .btn:disabled{ opacity: 0.35; cursor: default; box-shadow: none; }
+  .btn:not(:disabled):hover{ transform: translateY(-2px); box-shadow: 0 0 50px rgba(255,111,168,0.5); }
+
+  .btn-primary-wrap{ margin-top: 30px; }
+
+  /* ---------- invitation screen ---------- */
+  #screen-invite{ justify-content: flex-start; padding-top: 9vh; overflow-y: auto; }
+  #screen-invite .greet{
+    font-family: var(--font-display);
+    font-size: clamp(20px, 5.4vw, 28px);
+    color: var(--pink-pale);
+  }
+  #screen-invite .headline{ margin-top: 6px; }
+
+  .card{
+    margin-top: 34px;
+    width: min(84vw, 380px);
+    border: 1.5px solid var(--line);
+    border-radius: 26px;
+    background: linear-gradient(180deg, rgba(255,111,168,0.08), rgba(255,111,168,0.02));
+    backdrop-filter: blur(6px);
+    padding: 26px 22px;
+    box-shadow: 0 0 60px rgba(255,111,168,0.12), inset 0 0 40px rgba(255,111,168,0.04);
+  }
+  .detail-row{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 4px;
+    text-align: left;
+  }
+  .detail-row + .detail-row{ border-top: 1px dashed var(--line); }
+  .detail-icon{ font-size: 18px; flex-shrink: 0; width: 22px; text-align: center; }
+  .detail-text{ font-weight: 600; font-size: clamp(13px, 3.6vw, 15px); color: var(--ink); }
+  .detail-label{
+    display:block;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--pink-glow);
+    opacity: 0.75;
+    margin-bottom: 2px;
+  }
+
+  .message{
+    margin-top: 24px;
+    font-size: clamp(13px, 3.6vw, 15px);
+    line-height: 1.6;
+    color: var(--pink-pale);
+    opacity: 0.9;
+    max-width: 360px;
+  }
+
+  .rsvp-block{ margin-top: 40px; padding-bottom: 4vh; }
+  .rsvp-question{
+    font-family: var(--font-display);
+    font-size: clamp(17px, 4.6vw, 20px);
+    margin-bottom: 18px;
+  }
+  .rsvp-buttons{
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-yes, .btn-no{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(15px, 4vw, 18px);
+    padding: 18px 30px;
+    border-radius: 22px;
+    border: none;
+    cursor: pointer;
+    min-width: 130px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .btn-yes{
+    color: #2a0616;
+    background: linear-gradient(180deg, var(--pink-glow), var(--pink));
+    box-shadow: var(--shadow-pink);
+  }
+  .btn-no{
+    color: var(--pink-pale);
+    background: rgba(255,111,168,0.06);
+    border: 1.5px solid var(--line);
+  }
+  .btn-yes:active, .btn-no:active{ transform: scale(0.94); }
+  .btn-yes:hover{ transform: translateY(-2px); box-shadow: 0 0 50px rgba(255,111,168,0.5); }
+  .btn-no:hover{ border-color: var(--pink); transform: translateY(-2px); }
+
+  /* ---------- confirm screens ---------- */
+  #screen-confirm .headline{ font-size: clamp(30px, 8vw, 52px); }
+  .confetti-piece{
+    position: absolute;
+    top: -10%;
+    pointer-events: none;
+  }
+
+  footer.tiny{
+    position: fixed;
+    bottom: 10px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(255,217,234,0.25);
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  @media (max-width: 380px){
+    .card{ padding: 20px 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="bgFx"></div>
+<div class="vignette"></div>
+
+<div id="app">
+
+  <!-- ============ SCREEN 1 — INTRO ============ -->
+  <section class="screen active" id="screen-intro">
+    <div class="eyebrow">a whisper for you</div>
+    <!--
+      ✏️ Put your image file in the same folder as this index.html.
+      If your file isn't named "hello-kitty.png", change the src below to match.
+    -->
+    <img class="cat-mark" src="hello-kitty.png" alt="cute mascot" />
+ 
+    <h1 class="headline">pssst... someone has a<br/>birthday invitation for you</h1>
+    <p class="subline">♡</p>
+    <div class="hint">click anywhere ♡</div>
+  </section>
+
+
+  <!-- ============ SCREEN 2 — NAME ============ -->
+  <section class="screen" id="screen-name">
+    <div class="eyebrow">before we continue</div>
+    <h1 class="headline">wait... what can I call you? ♡</h1>
+    <input
+      type="text"
+      id="nameInput"
+      class="name-field"
+      placeholder="your name..."
+      autocomplete="off"
+      maxlength="30"
+    />
+    <div class="btn-primary-wrap">
+      <button class="btn" id="enterBtn" disabled>enter ♡</button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3 — INVITATION ============ -->
+  <section class="screen" id="screen-invite">
+    <p class="greet">hiii, <span id="guestNameSlot">friend</span> ♡</p>
+    <h1 class="headline">you're invited to<br/>my birthday!</h1>
+
+    <div class="card">
+      <div class="detail-row">
+        <div class="detail-icon">✧</div>
+        <div class="detail-text"><span class="detail-label">date</span><span id="eventDate">—</span></div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">✧</div>
+        <div class="detail-text"><span class="detail-label">time</span><span id="eventTime">—</span></div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">✧</div>
+        <div class="detail-text"><span class="detail-label">location</span><span id="eventLocation">—</span></div>
+      </div>
+    </div>
+
+    <p class="message" id="eventMessage">—</p>
+
+    <div class="rsvp-block">
+      <p class="rsvp-question">will you come? ♡</p>
+      <div class="rsvp-buttons">
+        <button class="btn-yes" id="rsvpYesBtn">YES ♡</button>
+        <button class="btn-no" id="rsvpNoBtn">NO ♡</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 4 — CONFIRM ============ -->
+  <section class="screen" id="screen-confirm">
+    <div id="confirmContent"></div>
+  </section>
+
+</div>
+
+<footer class="tiny">made with ♡</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/* ============================================================
+   ✏️  EDIT THIS SECTION — your birthday details
+   ============================================================ */
+const CONFIG = {
+  date: "saturday, october 3rd",
+  time: "7:00 pm",
+  location: "ny munkegade 74b",
+  message: "i hope you can come, \n and will celebrate the evening with me ♡",
+
+  // OPTIONAL: paste a Google Apps Script Web App URL here to log RSVPs
+  // to a Google Sheet automatically. Leave as "" to skip that step —
+  // the site will still work perfectly without it.
+  // See SETUP_INSTRUCTIONS.md for how to create this URL in 5 minutes.
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbyvmr61DQkdOQg1Vi05gGG3yhQexav_OqeOimOIVJMnWpPa5gxclRcV3WHmwC_mDac2/exec"
+};
+
+/* ============================================================
+   end of editable section — the rest is the app logic
+   ============================================================ */
+
+(function(){
+  "use strict";
+
+  let guestName = "";
+
+  const screens = {
+    intro: document.getElementById('screen-intro'),
+    name: document.getElementById('screen-name'),
+    invite: document.getElementById('screen-invite'),
+    confirm: document.getElementById('screen-confirm'),
+  };
+
+  function goTo(screenEl){
+    const current = document.querySelector('.screen.active');
+    if (current === screenEl) return;
+
+    if (window.gsap){
+      if (current){
+        gsap.to(current, {
+          opacity: 0, scale: 0.96, duration: 0.45, ease: 'power2.inOut',
+          onComplete: () => { current.classList.remove('active'); }
+        });
+      }
+      gsap.fromTo(screenEl,
+        { opacity: 0, scale: 1.04 },
+        { opacity: 1, scale: 1, duration: 0.6, delay: current ? 0.25 : 0, ease: 'power2.out',
+          onStart: () => { screenEl.classList.add('active'); } }
+      );
+    } else {
+      if (current) current.classList.remove('active');
+      screenEl.classList.add('active');
+    }
+  }
+
+  /* ---------- populate invitation details ---------- */
+  document.getElementById('eventDate').textContent = CONFIG.date;
+  document.getElementById('eventTime').textContent = CONFIG.time;
+  document.getElementById('eventLocation').textContent = CONFIG.location;
+  document.getElementById('eventMessage').textContent = CONFIG.message;
+
+  /* ---------- screen 1 -> 2 ---------- */
+  screens.intro.addEventListener('click', () => {
+    goTo(screens.name);
+    setTimeout(() => document.getElementById('nameInput').focus(), 500);
+  }, { once: true });
+
+  /* ---------- screen 2 logic ---------- */
+  const nameInput = document.getElementById('nameInput');
+  const enterBtn = document.getElementById('enterBtn');
+
+  nameInput.addEventListener('input', () => {
+    enterBtn.disabled = nameInput.value.trim().length === 0;
+  });
+  nameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !enterBtn.disabled) submitName();
+  });
+  enterBtn.addEventListener('click', submitName);
+
+  function submitName(){
+    guestName = nameInput.value.trim();
+    if (!guestName) return;
+    // remembered for this session only
+    window.__guestName = guestName;
+    document.getElementById('guestNameSlot').textContent = guestName;
+    goTo(screens.invite);
+  }
+
+  /* ---------- screen 3: RSVP ---------- */
+  document.getElementById('rsvpYesBtn').addEventListener('click', () => handleRsvp(true));
+  document.getElementById('rsvpNoBtn').addEventListener('click', () => handleRsvp(false));
+
+  function handleRsvp(attending){
+    recordRsvp(guestName, attending);
+    renderConfirm(attending);
+    goTo(screens.confirm);
+    if (attending) launchConfetti();
+  }
+
+  function renderConfirm(attending){
+    const el = document.getElementById('confirmContent');
+    if (attending){
+      el.innerHTML = `
+        <div class="eyebrow">confirmed</div>
+        <h1 class="headline">YAY!!! ♡♡♡</h1>
+        <p class="subline">${escapeHtml(guestName)} is coming!!</p>
+      `;
+    } else {
+      el.innerHTML = `
+        <div class="eyebrow">noted</div>
+        <h1 class="headline">awww :( ♡</h1>
+        <p class="subline">I'll miss you, ${escapeHtml(guestName)}!</p>
+      `;
+    }
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  /* ---------- RSVP recording ----------
+     Sends {name, attending, timestamp} to your Google Apps Script
+     web app, which appends a row to a Google Sheet. If CONFIG.googleScriptUrl
+     is empty, this quietly does nothing — the invitation still works fine,
+     you just won't get an automatic record of responses.
+     "no-cors" mode is used because Apps Script doesn't return normal
+     CORS headers; the request still lands in your sheet correctly. */
+  function recordRsvp(name, attending){
+    if (!CONFIG.googleScriptUrl) return;
+    try {
+      fetch(CONFIG.googleScriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          name: name,
+          attending: attending ? 'Yes' : 'No',
+          timestamp: new Date().toISOString()
+        })
+      });
+    } catch (err) {
+      console.warn('RSVP logging failed silently:', err);
+    }
+  }
+
+  /* ---------- ambient floating hearts / sparkles ---------- */
+  const bgFx = document.getElementById('bgFx');
+  const glyphs = ['♡','✦','✧','⋆'];
+
+  function spawnFx(){
+    const el = document.createElement('div');
+    el.className = 'fx-item';
+    el.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    const size = 22 + Math.random()*34;
+    const startX = Math.random()*100;
+    el.style.left = startX + 'vw';
+    el.style.bottom = '-5vh';
+    el.style.fontSize = size + 'px';
+    el.style.color = Math.random() > 0.5 ? '#ff9dc9' : '#ff6fa8';
+    bgFx.appendChild(el);
+
+    const drift = (Math.random() - 0.5) * 120;
+    const duration = 9 + Math.random()*7;
+
+    if (window.gsap){
+      gsap.fromTo(el,
+        { y: 0, opacity: 0, rotate: 0 },
+        {
+          y: -window.innerHeight * 1.15,
+          x: drift,
+          opacity: 0.85,
+          rotate: (Math.random()-0.5)*60,
+          duration: duration,
+          ease: 'sine.inOut',
+          onComplete: () => el.remove()
+        }
+      );
+      gsap.to(el, { opacity: 0, duration: 1.5, delay: duration - 1.5 });
+    } else {
+      el.remove();
+    }
+  }
+
+  setInterval(spawnFx, 550);
+  for (let i=0;i<6;i++) setTimeout(spawnFx, i*250);
+
+  /* ---------- confetti burst on YES ---------- */
+  function launchConfetti(){
+    if (!window.gsap) return;
+    const colors = ['#ff6fa8','#ff9dc9','#ffd9ea','#fff6fa'];
+    for (let i=0;i<28;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const isHeart = Math.random() > 0.4;
+      piece.textContent = isHeart ? '♡' : '✦';
+      piece.style.left = (45 + (Math.random()-0.5)*50) + 'vw';
+      piece.style.fontSize = (10 + Math.random()*16) + 'px';
+      piece.style.color = colors[Math.floor(Math.random()*colors.length)];
+      document.body.appendChild(piece);
+
+      gsap.fromTo(piece,
+        { y: '40vh', x: 0, opacity: 1, rotate: 0 },
+        {
+          y: (Math.random()*0.5 + 0.6) * window.innerHeight,
+          x: (Math.random()-0.5) * 300,
+          rotate: (Math.random()-0.5) * 360,
+          opacity: 0,
+          duration: 1.8 + Math.random()*1.2,
+          ease: 'power1.out',
+          onComplete: () => piece.remove()
+        }
+      );
+    }
+  }
+
+})();
+</script>
+</body>
+</html>
