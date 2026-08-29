@@ -19,13 +19,13 @@
 
 <style>
   :root{
-    --bg: #000000;
-    --pink: #ff6fa8;
+    --bg: #ffffff;
+    --pink: #d92d74;
     --pink-deep: #d92d74;
-    --pink-glow: #fd84ba;
-    --pink-pale: #ffafd3;
-    --ink: #fff6fa;
-    --line: rgba(255,159,201,0.18);
+    --pink-glow: #d92d74;
+    --pink-pale: #e08eb0;
+    --ink: #d92d74;
+    --line: rgba(228, 192, 208, 0.18);
     --shadow-pink: 0 0 40px rgba(255,111,168,0.35);
     --font-display: 'Baloo 2', system-ui, sans-serif;
     --font-body: 'Quicksand', system-ui, sans-serif;
@@ -35,7 +35,7 @@
 
   html,body{
     margin:0; padding:0; height:100%;
-    background: radial-gradient(120% 140% at 50% -10%, #1a0f16 0%, var(--bg) 55%, #050408 100%);
+    background: radial-gradient(120% 140% at 50% -10%, #c888b1 0%, var(--bg) 55%, #e4d7e4 100%);
     color: var(--ink);
     font-family: var(--font-body);
     overflow: hidden;
@@ -118,7 +118,7 @@
     font-family: var(--font-body);
     font-weight: 500;
     font-size: clamp(14px, 3.6vw, 17px);
-    color: var(--pink-pale);
+    color: var(--pink);
     opacity: 0.85;
     margin-top: 14px;
     max-width: 420px;
@@ -181,7 +181,7 @@
     border: none;
     cursor: pointer;
     color: #2a0616;
-    background: linear-gradient(180deg, var(--pink-glow), var(--pink));
+    background: linear-gradient(180deg, var(--pink), var(--pink-pale));
     padding: 14px 34px;
     border-radius: 999px;
     font-size: clamp(14px, 3.6vw, 16px);
@@ -199,7 +199,7 @@
   #screen-invite .greet{
     font-family: var(--font-display);
     font-size: clamp(20px, 5.4vw, 28px);
-    color: var(--pink-pale);
+    color: var(--pink);
   }
   #screen-invite .headline{ margin-top: 6px; }
 
@@ -268,17 +268,17 @@
   }
   .btn-yes{
     color: #2a0616;
-    background: linear-gradient(180deg, var(--pink-glow), var(--pink));
+    background: linear-gradient(180deg, var(--pink), var(--pink-pale));
     box-shadow: var(--shadow-pink);
   }
   .btn-no{
     color: var(--pink-pale);
-    background: rgba(255,111,168,0.06);
-    border: 1.5px solid var(--line);
+    background: rgba(241, 95, 153, 0.257);
+
   }
   .btn-yes:active, .btn-no:active{ transform: scale(0.94); }
-  .btn-yes:hover{ transform: translateY(-2px); box-shadow: 0 0 50px rgba(255,111,168,0.5); }
-  .btn-no:hover{ border-color: var(--pink-deep); transform: translateY(-2px); }
+  .btn-yes:hover{ transform: translateY(-10px); box-shadow: 0 0 50px rgba(255,111,168,0.5); }
+  .btn-no:hover{ border-color: var(--pink-deep); transform: translateY(-10px); }
 
   /* ---------- confirm screens ---------- */
   #screen-confirm .headline{ font-size: clamp(30px, 8vw, 52px); }
@@ -394,10 +394,10 @@
    ✏️  EDIT THIS SECTION — your birthday details
    ============================================================ */
 const CONFIG = {
-  date: "saturday, october 3rd",
-  time: "7:00 pm",
+  date: "sunday, october 4th",
+  time: "10:00 am",
   location: "ny munkegade 74b",
-  message: "i hope you can make it — let's celebrate the evening together ♡\n\ntheme is kawaii (japanese for \"cute\"), so wear something pink if you can ♡",
+  message: "i hope you can make it ♡\nplease respond below and if you don't know just yet, please just respond by september 20th ♡",
 
   googleScriptUrl: "https://script.google.com/macros/s/AKfycbyvmr61DQkdOQg1Vi05gGG3yhQexav_OqeOimOIVJMnWpPa5gxclRcV3WHmwC_mDac2/exec"
 };
